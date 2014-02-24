@@ -83,7 +83,14 @@ public class GuiceBundle<T extends Configuration> implements ConfiguredBundle<T>
 		}
 		modules.add(Modules.override(new JerseyServletModule()).with(jerseyContainerModule));
 		modules.add(dropwizardEnvironmentModule);
-		injector = Guice.createInjector(modules);
+
+		try {
+			injector = Guice.createInjector(modules);
+		}
+		catch (Exception e) {
+			logger.error("Exception occurred when creating Guice Injector - exiting", e);
+			System.exit(-1);
+		}
 		if (autoConfig != null) {
 			autoConfig.initialize(bootstrap, injector);
 		}
